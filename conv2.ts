@@ -76,7 +76,7 @@ function showHelp(ctx: Context, req: Request) {
   return new Response(
     `Usage: POST/PUT ${host}/${ctx.from || ":from"}/${ctx.to || ":to"}
     
-  Example: curl -d '{"name": "tom"}' http://xxx/json/yaml`,
+  Example: curl -d '{"name": "tom"}' ${host}/json/yaml`,
     { headers: { "content-type": "text/plain" } },
   );
 }
