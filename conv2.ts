@@ -3,6 +3,10 @@ import {
   parse as YamlParse,
   stringify as YamlStringify,
 } from "https://deno.land/std@0.159.0/encoding/yaml.ts";
+import {
+  parse as TomlParse,
+  stringify as TomlStringify,
+} from "https://deno.land/std@0.159.0/encoding/toml.ts";
 
 type Context = {
   from: string;
@@ -13,6 +17,8 @@ type Context = {
 const ConvertRouter = new Map<string, (i: string) => string>([
   ["yaml:json", yaml__json],
   ["json:yaml", json__yaml],
+  ["toml:json", toml__json],
+  ["json:toml", json__toml],
 ]);
 
 async function handleRequest(req: Request) {
@@ -69,6 +75,16 @@ function yaml__json(input: string) {
 // json2yaml
 function json__yaml(input: string) {
   return YamlStringify(JSON.parse(input));
+}
+
+// json2toml
+function json__toml(input: string) {
+  return TomlStringify(JSON.parse(input));
+}
+
+// toml2json
+function toml__json(input: string) {
+  return JSON.stringify(TomlParse(input));
 }
 
 function showHelp(ctx: Context, req: Request) {
