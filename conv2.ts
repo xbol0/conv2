@@ -19,6 +19,8 @@ const ConvertRouter = new Map<string, (i: string) => string>([
   ["json:yaml", json__yaml],
   ["toml:json", toml__json],
   ["json:toml", json__toml],
+  ["toml:yaml", toml__yaml],
+  ["yaml:toml", yaml__toml],
 ]);
 
 async function handleRequest(req: Request) {
@@ -85,6 +87,16 @@ function json__toml(input: string) {
 // toml2json
 function toml__json(input: string) {
   return JSON.stringify(TomlParse(input));
+}
+
+// yaml2toml
+function yaml__toml(input: string) {
+  return TomlStringify(YamlParse(input) as Record<string, unknown>);
+}
+
+// toml2yaml
+function toml__yaml(input: string) {
+  return YamlStringify(TomlParse(input));
 }
 
 function showHelp(ctx: Context, req: Request) {
