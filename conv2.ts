@@ -109,8 +109,4 @@ function showHelp(ctx: Context, req: Request) {
   );
 }
 
-function start() {
-  serve(handleRequest);
-}
-
-start();
+serve(handleRequest);
