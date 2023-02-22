@@ -16,6 +16,12 @@ Current supports these formats converting:
 
 - YAML -> JSON
 - JSON -> YAML
+- YAML -> TOML
+- TOML -> YAML
+- JSON -> TOML
+- TOML -> JSON
+- bech32 -> hex
+- hex -> bech32
 
 ## API
 
