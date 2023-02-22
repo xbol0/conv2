@@ -1,12 +1,14 @@
-import { serve } from "https://deno.land/std@0.159.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import {
   parse as YamlParse,
   stringify as YamlStringify,
-} from "https://deno.land/std@0.159.0/encoding/yaml.ts";
+} from "https://deno.land/std@0.177.0/encoding/yaml.ts";
 import {
   parse as TomlParse,
   stringify as TomlStringify,
-} from "https://deno.land/std@0.159.0/encoding/toml.ts";
+} from "https://deno.land/std@0.177.0/encoding/toml.ts";
+import * as hex from "https://deno.land/std@0.177.0/encoding/hex.ts";
+import { bech32 } from "https://esm.sh/bech32@2.0.0";
 
 type Context = {
   from: string;
@@ -21,6 +23,8 @@ const ConvertRouter = new Map<string, (i: string) => string>([
   ["json:toml", json__toml],
   ["toml:yaml", toml__yaml],
   ["yaml:toml", yaml__toml],
+  ["hex:bech32", hex__bech32],
+  ["bech32:hex", bech32__hex],
 ]);
 
 async function handleRequest(req: Request) {
@@ -97,6 +101,22 @@ function yaml__toml(input: string) {
 // toml2yaml
 function toml__yaml(input: string) {
   return YamlStringify(TomlParse(input));
+}
+
+// hex2bech32
+function hex__bech32(input: string) {
+  const words = bech32.toWords(
+    hex.decode(new TextEncoder().encode(input)),
+  );
+  return bech32.encode("bc", words);
+}
+
+// bech322hex
+function bech32__hex(input: string) {
+  const res = bech32.decode(input);
+  return new TextDecoder().decode(hex.encode(
+    new Uint8Array(bech32.fromWords(res.words)),
+  ));
 }
 
 function showHelp(ctx: Context, req: Request) {
